@@ -130,8 +130,8 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
 
   describe('with addPath function', () => {
     let backend
-    const calledLanguages = []
-    const calledNamespaces = []
+    let calledLanguages = []
+    let calledNamespaces = []
     const addPathSpy = (language, namespace) => {
       calledLanguages.push(language)
       calledNamespaces.push(namespace)
@@ -150,6 +150,11 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
     })
 
     describe('#create', () => {
+      beforeEach(() => {
+        calledLanguages = []
+        calledNamespaces = []
+      })
+
       it('should write data', (done) => {
         backend.create('en', 'test', 'key', 'value', (dataArray, resArray) => {
           try {
@@ -162,6 +167,19 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
             done(e)
           }
         })
+      })
+
+      it('should write data (without callback)', (done) => {
+        backend.create('en', 'test', 'key', 'value')
+        setTimeout(() => {
+          try {
+            expect(calledLanguages).to.eql(['en'])
+            expect(calledNamespaces).to.eql(['test'])
+            done()
+          } catch (e) {
+            done(e)
+          }
+        }, 1000)
       })
     })
   })

@@ -181,7 +181,7 @@ var Backend = function () {
           dataArray.push(data);
           resArray.push(res);
 
-          if (finished === languages.length) {
+          if (finished === languages.length && callback) {
             callback(dataArray, resArray);
           }
         });
